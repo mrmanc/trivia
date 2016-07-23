@@ -1,11 +1,14 @@
 package com.adaptionsoft.games.uglytrivia;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Game {
     ArrayList players = new ArrayList();
-    int[] places = new int[6];
+	List<Player> players2 = Arrays.asList(new Player [] {new Player(), new Player(), new Player(), new Player(), new Player(), new Player()});
+	int[] places = new int[6];
     int[] purses  = new int[6];
     boolean[] inPenaltyBox  = new boolean[6];
     
@@ -39,6 +42,7 @@ public class Game {
 		
 	    players.add(playerName);
 	    places[howManyPlayers()] = 0;
+	    players2.get(howManyPlayers()).setPosition(0);
 	    purses[howManyPlayers()] = 0;
 	    inPenaltyBox[howManyPlayers()] = false;
 	    
@@ -60,6 +64,9 @@ public class Game {
 				isGettingOutOfPenaltyBox = true;
 				
 				System.out.println(players.get(currentPlayer) + " is getting out of the penalty box");
+				Player player = players2.get(currentPlayer);
+				player.setPosition(player.getPosition() + roll);
+				if (player.getPosition() > 11) player.setPosition(player.getPosition() - 12);
 				places[currentPlayer] = places[currentPlayer] + roll;
 				if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
 				
@@ -74,7 +81,9 @@ public class Game {
 				}
 			
 		} else {
-		
+			Player player = players2.get(currentPlayer);
+			player.setPosition(player.getPosition() + roll);
+			if (player.getPosition() > 11) player.setPosition(player.getPosition() - 12);
 			places[currentPlayer] = places[currentPlayer] + roll;
 			if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
 			
