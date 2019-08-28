@@ -1,27 +1,37 @@
 package com.adaptionsoft.games.trivia;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
 import com.adaptionsoft.games.trivia.runner.GameRunner;
 import org.junit.Test;
 
-import java.io.*;
-import java.nio.file.Files;
+import javax.xml.bind.DatatypeConverter;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class SomeTest {
 
-	@Test
-	public void true_is_true() throws Exception {
-		assertTrue(false);
-	}
+    @Test
+    public void testGoldenMaster() throws Exception {
 
-	@Test
-	public void testGoldenMaster() throws IOException {
-		File runResults = new File("/var/tmp/runresults.txt");
-		System.setOut(new PrintStream(new FileOutputStream(runResults)));
-		GameRunner.runTheGame(new Random(1));
-		assertThat(new String(Files.readAllBytes(runResults.toPath())), is(new String(Files.readAllBytes(new File("/var/tmp/goldenmaster.txt").toPath()))));
-	}
+        ByteArrayOutputStream console = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(console));
+
+        GameRunner.runTheGame(new Random(1));
+//        String runResults = console.toString();
+//        String goldenMaster = new String(Files.readAllBytes(new File("../goldenmaster.txt").toPath()));
+//        assertThat(runResults, is(goldenMaster));
+
+        assertThat(hash(console.toString()), is("E1CCC59934D33A4D15B4B37ADF19A617"));
+    }
+
+    private String hash(String runResults) throws NoSuchAlgorithmException {
+        return DatatypeConverter.printHexBinary(
+                MessageDigest.getInstance("MD5").digest(runResults.getBytes())
+        ).toUpperCase();
+    }
 }
